@@ -1,14 +1,17 @@
-'use client'
+'use client';
 
-import { useState } from 'react';
 import Login from '@/components/Login/Login.component';
+import { useAppSelector } from '@/lib/hooks';
+import ATM from '@/components/ATM/ATM.component';
 
 export default function Home() {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const isAuthtenticated = useAppSelector(state =>
+    state.auth.authenticatedUser ? true : false
+  );
 
   return (
-    <div className='flex justify-center items-center min-h-screen'>
-      <Login />
+    <div className="flex justify-center items-center min-h-screen">
+      {isAuthtenticated ? <ATM /> : <Login />}
     </div>
   );
 }

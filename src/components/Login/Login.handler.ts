@@ -1,11 +1,11 @@
-import { Account } from '@/lib/features/accounts/accountslice.types';
+import { Account, Accounts } from '@/lib/features/accounts/accountSlice.types';
 
 export const authUser = (
   username: string,
   pin: number,
-  accountsData: Account[]
+  accountsData: Accounts
 ): Account => {
-  const user = accountsData.find(account => account.username == username);
+  const user = accountsData[username];
 
   if (!user) {
     throw new Error('User does not exists');
