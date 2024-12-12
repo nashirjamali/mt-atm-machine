@@ -1,18 +1,21 @@
 export type Transaction = {
-  date: string;
-  type: 'deposit' | 'withdraw';
+  date: number;
+  type: 'Deposit' | 'Withdraw';
   amount: number;
 };
 
 export type Account = {
   username: string;
-  pin: number;
   balance: number;
   transactions: Transaction[];
 };
 
 export type Accounts = {
   [username: string]: Account;
+};
+
+export type SetAccountPayload = {
+  username: string;
 };
 
 export type DepositPayload = {

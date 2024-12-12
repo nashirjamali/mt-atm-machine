@@ -12,9 +12,12 @@ import {
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import React, { useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { authUser } from './Login.handler';
+
+import { useAppDispatch } from '@/lib/hooks';
+import { setAccount } from '@/lib/features/accounts/accountsSlice';
 import { setAuthenticatedUser } from '@/lib/features/auth/authSlice';
+
+import { authUser } from './Login.handler';
 
 const LoginSchema = Yup.object().shape({
   username: Yup.string().required('Required'),
@@ -22,7 +25,6 @@ const LoginSchema = Yup.object().shape({
 });
 
 export default function Login() {
-  const accounts = useAppSelector(state => state.accounts);
   const dispatch = useAppDispatch();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -32,20 +34,13 @@ export default function Login() {
       username: '',
       pin: '',
     },
-    onSubmit: () => {
+    onSubmit: async ({ username, pin }) => {
       setErrorMessage(null);
-
       try {
-        const user = authUser(values.username, parseInt(values.pin), accounts);
-
-        dispatch(
-          setAuthenticatedUser({
-            authenticatedUser: user.username,
-          })
-        );
+        const user = await authUser(username, pin);
+        dispatch(setAccount({ username: user }));
+        dispatch(setAuthenticatedUser({ authenticatedUser: user }));
       } catch (error) {
-        console.log(error);
-
         setErrorMessage((error as Error).message);
       }
     },

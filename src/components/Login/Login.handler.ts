@@ -1,19 +1,11 @@
-import { Account, Accounts } from '@/lib/features/accounts/accountSlice.types';
+import axios from 'axios';
 
-export const authUser = (
-  username: string,
-  pin: number,
-  accountsData: Accounts
-): Account => {
-  const user = accountsData[username];
+export const authUser = async (username: string, pin: string) => {
+    const response = await axios.post('/api/auth', { username, pin });
 
-  if (!user) {
-    throw new Error('User does not exists');
-  }
+    if (response.status !== 200) {
+      throw new Error(response.data.data.message);
+    }
 
-  if (user.pin !== pin) {
-    throw new Error('Username or PIN is invalid');
-  }
-
-  return user;
+    return response.data.data.username;
 };

@@ -16,6 +16,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { deposit, withdraw } from '@/lib/features/accounts/accountsSlice';
 import { setAuthenticatedUser } from '@/lib/features/auth/authSlice';
+import Transactions from '../Transactions/Transactions.component';
 
 const ATMSchema = Yup.object().shape({
   amount: Yup.number(),
@@ -78,7 +79,7 @@ export default function ATM() {
     dispatch(setAuthenticatedUser({ authenticatedUser: undefined }));
 
   return (
-    <Card className="w-96">
+    <Card>
       {errorMessage && (
         <div
           className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
@@ -92,47 +93,50 @@ export default function ATM() {
       </CardHeader>
       <Divider />
       {account && (
-        <CardBody className="p-10 flex flex-col gap-8">
-          <div className="flex flex-col gap-2">
-            <p className="text-slate-950 font-normal text-sm">
-              Account Balance
-            </p>
-            <h1 className="text-slate-950 font-bold text-2xl">
-              ${account?.balance}
-            </h1>
-          </div>
-          <Divider />
-          <div className="flex flex-col gap-5">
-            <Input
-              label="Amount"
-              variant="bordered"
-              type="number"
-              name="amount"
-              className="text-slate-950"
-              value={amount}
-              onChange={handleChange}
-              errorMessage={errors.amount}
-              isInvalid={errors.amount ? true : false}
-            />
-            <div className="flex flex-row gap-2 justify-around">
-              <Button
-                variant="solid"
-                color="primary"
-                fullWidth={true}
-                onClick={handleDeposit}
-              >
-                Deposit
-              </Button>
-              <Button
+        <CardBody className="flex flex-row">
+          <div className="p-10 flex flex-col gap-8 w-80">
+            <div className="flex flex-col gap-2">
+              <p className="text-slate-950 font-normal text-sm">
+                Account Balance
+              </p>
+              <h1 className="text-slate-950 font-bold text-2xl">
+                ${account?.balance}
+              </h1>
+            </div>
+            <Divider />
+            <div className="flex flex-col gap-5">
+              <Input
+                label="Amount"
                 variant="bordered"
-                color="primary"
-                fullWidth={true}
-                onClick={handleWithdraw}
-              >
-                Withdraw
-              </Button>
+                type="number"
+                name="amount"
+                className="text-slate-950"
+                value={amount}
+                onChange={handleChange}
+                errorMessage={errors.amount}
+                isInvalid={errors.amount ? true : false}
+              />
+              <div className="flex flex-row gap-2 justify-around">
+                <Button
+                  variant="solid"
+                  color="primary"
+                  fullWidth={true}
+                  onClick={handleDeposit}
+                >
+                  Deposit
+                </Button>
+                <Button
+                  variant="bordered"
+                  color="primary"
+                  fullWidth={true}
+                  onClick={handleWithdraw}
+                >
+                  Withdraw
+                </Button>
+              </div>
             </div>
           </div>
+          <Transactions account={account} />
         </CardBody>
       )}
       <Divider />
